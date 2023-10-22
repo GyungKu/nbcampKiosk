@@ -1,11 +1,8 @@
-import java.util.Map;
-import java.util.Scanner;
-
 public class Main {
 
     public static void main(String[] args) {
         final Kiosk kiosk = new Kiosk();
-        Scanner sc = new Scanner(System.in);
+        Customer customer = new Customer();
 
         // 키오스크 메뉴, 상품 추가
         kioskSet(kiosk);
@@ -13,142 +10,91 @@ public class Main {
         // 키오스크 동작
         EXIT:
         while (true) {
-            Map<Integer, Menu> menus = kiosk.getMenus();
-            kiosk.printMenus(); // 메뉴판 출력
+            boolean flag = true;
+            int select = -1;
 
-            int choice = sc.nextInt(); // 번호 선택
-
-            // 메뉴판에 없는 번호라면
-            if (menus.size()+4 < choice || choice < 0) {
-                System.out.println("선택할 수 없는 메뉴입니다.");
-                System.out.println();
-                continue;
+            while (flag) {
+                kiosk.printMenus(); // 메뉴판 출력
+                select = kiosk.checkSelect(customer.select()); // 메뉴가 있는지, 메뉴의 상품이 존재하는지 여부 체크하고 선택한 번호를 반환
+                flag = select > -1 ? false : true;
             }
 
-            Menu menu = kiosk.getMenus().get(choice); // 선택한 메뉴
-            switch (choice) {
 
+            switch (select) {
                 case 0:
                     break EXIT;
-
-                // 장바구니 이동 및 주문
                 case 5:
-                    // 장바구니 출력
-                    kiosk.printCart();
-
-                    // 주문, 장바구니 초기화, 메뉴판 선택
-                    int orderChoice = sc.nextInt();
-                    kiosk.order(orderChoice);
+                    while (!flag) {
+                        kiosk.printCart();
+                        flag = kiosk.order(customer.select());
+                    }
                     break;
-
-
-                // 주문내역 및 주문취소
                 case 6:
-
-                    kiosk.printOrders(); // 주문 내역 출력
-
-                    int cancelChoice = sc.nextInt(); // 주문번호 선택
-                    // 메뉴판으로 돌아가기
-                    if (cancelChoice == 0) {
-                        break;
+                    while (!flag) {
+                        if (kiosk.printOrders()) {
+                            kiosk.cancel(customer.select());
+                            break;
+                        }
+                        flag = true;
                     }
-
-                    // 주문 취소
-                    kiosk.cancel(cancelChoice);
-                    System.out.println("주문 취소 완료");
-                    System.out.println();
                     break;
-
                 case 7:
-                    // 총 매출
-                    System.out.println("매출 : " + kiosk.sales());
-                    System.out.println("메뉴판 돌아가시려면 아무 문자나 입력해 주세요");
-                    sc.next();
+                    kiosk.sales();
                     break;
-
                 case 8:
-                    // 판매 내역
-                    if (kiosk.salesDetails()) {
-                        System.out.println("메뉴판 돌아가시려면 아무 문자나 입력해 주세요");
-                        sc.next();
-                        System.out.println();
-                    }
+                    kiosk.salesDetails();
                     break;
-
                 default:
-
-                    // 메뉴안 상품들 출력
-                    if (!kiosk.printProducts(menu)) { // 메뉴 안에 상품이 존재하지 메뉴판으로 않는다면 돌아감
+                    Product choiceProduct;
+                    while (true) {
+                        kiosk.printProducts(select);
+                        choiceProduct = kiosk.selectProduct(select, customer.select()); // 상품을 선택하고 선택한 상품을 출력함
+                        if (choiceProduct != null) {
+                            break;
+                        }
+                    }
+                    if (choiceProduct.getName().equals("")) {
                         break;
                     }
 
-                    int productNum = sc.nextInt(); // 상품 선택
-                    if (productNum == 0) { // 0 선택 시 메뉴판으로 돌아감
-                        break;
-                    }
 
-                    Product choiceProduct = kiosk.printChoiceProduct(productNum, menu); // 상품을 선택하고 선택한 상품을 출력함
-                    if (choiceProduct == null) { // 상품 란에 존재하지 않는 번호를 선택하면 메뉴판으로
-                        break;
-                    }
-
-                    boolean isDouble = false;
-                    if (kiosk.printSizeChoice(menu)) { // 메뉴가 햄버거 일 때만 더블을 고를 건지 물어보고 선택함
-                        int sizeChoice = sc.nextInt();
-                        if (sizeChoice == 1) {
-                            isDouble = false;
-                        } else if (sizeChoice == 2) {
-                            isDouble = true;
+                    String size = "";
+                    while (true) {
+                        if (kiosk.printSize(select)) {
+                            size = kiosk.sizeChoice(customer.select());
+                            if (!size.equals("?")) {
+                                break;
+                            }
                         } else {
-                            System.out.println("잘못 입력하셨습니다. 메뉴판으로 돌아갑니다.");
-                            System.out.println();
-                            continue;
+                            break;
+                        }
+                    }
+                    boolean isDouble = size.equals("더블") ? true : false;
+
+
+                    int quantity;
+                    while (true) {
+                        kiosk.printQuantityInput();
+                        quantity = kiosk.inputQuantity(customer.select());
+                        if (quantity >= 0) {
+                            break;
                         }
                     }
 
-                    kiosk.printQuantityInput(); // 개수 입력해 주세요
-                    int quantity = sc.nextInt(); // 개수 입력
-                    // 조건에 맞게 생성 후 카트에 넣음
-                    OrderProduct orderProduct = new OrderProduct(choiceProduct, isDouble, quantity);
-
-                    System.out.println("정말 장바구니에 추가하시겠습니까?");
-                    System.out.println("1. 예   2. 아니오");
-                    int check = sc.nextInt();
-                    if (check == 1) {
-                        kiosk.addCart(orderProduct, quantity);
-                    } else {
-                        System.out.println("장바구니에 넣기를 취소하셨습니다. 메뉴판으로 돌아갑니다.");
-                        System.out.println();
+                    if (quantity == 0) {
+                        break;
                     }
 
-
-//                    int sizeChoice = sc.nextInt();
-//                    boolean isDouble = kiosk.choiceSize(choiceProduct, menu, sizeChoice);
-//                    int quantity = sc.nextInt();
-//                    kiosk.addCart(choiceProduct, isDouble, quantity);
-
-
-//                    sizeAndQuantity(menu, kiosk, sc, choiceProduct);
+                    while (true) {
+                        kiosk.printAddCart();
+                        boolean addToCart = kiosk.addCart(choiceProduct, isDouble, quantity, customer.select());
+                        if (addToCart) {
+                            break;
+                        }
+                    }
             }
         }
-
     }
-
-//    private static void sizeAndQuantity(Menu menu, Kiosk kiosk, Scanner sc, Product choiceProduct) {
-//
-//        boolean isDouble = false;
-//        if (menu.getName().equals("햄버거")) {
-//            System.out.println("1. 싱글사이즈   2. 더블사이즈(+2000원) 선택해주세요");
-//            int sizeChoice = sc.nextInt();
-//            isDouble = sizeChoice == 1 ? false : true;
-//        }
-//
-//        // 개수 선택
-//        System.out.println("몇 개를 장바구니에 넣으시겠습니까? 원치 않으시면 0을 입력해 주세요");
-//        int quantity = sc.nextInt();
-//        OrderProduct orderProduct = new OrderProduct(choiceProduct, isDouble, quantity);
-//        kiosk.addCart(orderProduct, quantity);
-//    }
 
     private static void kioskSet(Kiosk kiosk) {
         // 메뉴 추가
