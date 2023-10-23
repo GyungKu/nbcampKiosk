@@ -1,13 +1,13 @@
 import java.util.*;
 
 public class Kiosk {
-    private Map<Integer, Order> orders = new HashMap(); // 주문번호, 주문
+    private final Map<Integer, Order> orders = new HashMap(); // 주문번호, 주문
     private int orderSeq = 1;
-    private Map<Integer, Menu> menus = new HashMap(); // 메뉴번호, 메뉴
+    private final Map<Integer, Menu> menus = new HashMap(); // 메뉴번호, 메뉴
     private int menuSeq = 1;
-    private Map<Menu, List<Product>> products = new HashMap(); // 카테고리, 상품목록
+    private final Map<Menu, List<Product>> products = new HashMap(); // 카테고리, 상품목록
 
-    private List<OrderProduct> cart = new ArrayList<>();
+    private final List<OrderProduct> cart = new ArrayList<>();
 
     public void menuRegistration(Menu menu) {
         menus.put(menuSeq++, menu);
@@ -279,22 +279,4 @@ public class Kiosk {
         System.out.println("1. 주문   2. 메뉴판   3. 장바구니 초기화");
     }
 
-
-
-
-    public Map<Integer, Order> getOrders() {
-        return orders;
-    }
-
-    public Map<Integer, Menu> getMenus() {
-        return menus;
-    }
-
-    public Map<Menu, List<Product>> getProducts() {
-        return products;
-    }
-
-    public List<OrderProduct> getCart() {
-        return cart;
-    }
 }

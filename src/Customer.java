@@ -7,8 +7,7 @@ public class Customer {
 
     public int select() {
         try {
-            int input = sc.nextInt();
-            return input;
+            return sc.nextInt();
         } catch (InputMismatchException e) {
             throw new IllegalArgumentException(e);
         }
