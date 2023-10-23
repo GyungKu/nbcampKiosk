@@ -1,8 +1,6 @@
 import java.util.*;
 
 public class Kiosk {
-
-    Scanner sc = new Scanner(System.in);
     private Map<Integer, Order> orders = new HashMap(); // 주문번호, 주문
     private int orderSeq = 1;
     private Map<Integer, Menu> menus = new HashMap(); // 메뉴번호, 메뉴
@@ -41,15 +39,6 @@ public class Kiosk {
         System.out.println("[ ORDER MENU ]");
         System.out.println(menus.size()+1 + ". Order       | 장바구니를 확인 후 주문합니다.");
         System.out.println(menus.size()+2 + ". Cancel      | 진행 중인 주문을 취소합니다.");
-    }
-
-    public int choiceMenu() {
-        int menuNum  = sc.nextInt();
-        if (menuNum > menus.size()+4 || menuNum < 0) {
-            System.out.println("선택할 수 없는 메뉴입니다.");
-            System.out.println();
-        }
-        return menuNum;
     }
 
     public int checkSelect(int select) {
@@ -235,8 +224,7 @@ public class Kiosk {
             sales += order.totalPrice();
         }
         System.out.println("매출 : " + sales);
-        System.out.println("메뉴판 돌아가시려면 아무 문자나 입력해 주세요");
-        sc.next();
+        System.out.println("메뉴판 돌아가시려면 아무 숫자나 입력해 주세요");
     }
 
 
@@ -248,9 +236,8 @@ public class Kiosk {
                     System.out.println(product.getName() + " | " + product.getPrice() + "원 | 수량 : " + product.getQuantity());
                 });
             });
-            System.out.println("메뉴판 돌아가시려면 아무 문자나 입력해 주세요");
+            System.out.println("메뉴판 돌아가시려면 아무 숫자나 입력해 주세요");
             System.out.println();
-            sc.next();
         } else {
             System.out.println("판매내역이 존재하지 않습니다.");
             System.out.println("2초 뒤 메뉴판으로 돌아갑니다.");
