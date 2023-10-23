@@ -40,9 +40,11 @@ public class Main {
                     break;
                 case 7:
                     kiosk.sales();
+                    customer.select();
                     break;
                 case 8:
                     kiosk.salesDetails();
+                    customer.select();
                     break;
                 default:
                     Product choiceProduct;
