@@ -42,10 +42,11 @@ public class Kiosk {
     }
 
     public int checkSelect(int select) {
-        if (select <= menus.size()+4 && select >= 0) {
-            if (select > menus.size() || select == 0) {
+        if (select <= menus.size()+4 && select >= 0) { // 올바른 범위의 숫자를 입력 했는지
+            if (select > menus.size() || select == 0) { // 0 또는 5 ~ 8번의 항목을 선택했다면 번호를 반환
                 return select;
             }
+            // 메뉴중 하나를 선택했다면 메뉴안에 등록된 상품이 있는지 체크하고 있으면 번호를 반환, 아니라면 -1 반환해서 출력부터 다시
             Menu menu = menus.get(select);
             List<Product> productList = products.get(menu);
             if (menu != null && productList.size() > 0 && productList != null) {
@@ -103,7 +104,7 @@ public class Kiosk {
         return false;
     }
 
-    public String sizeChoice(int select) {
+    public String selectSize(int select) {
                 while (true) {
                     if (select == 1) {
                         return "싱글";
@@ -117,11 +118,11 @@ public class Kiosk {
             }
     }
 
-    public void printQuantityInput() {
+    public void printSelectQuantity() {
         System.out.println("몇 개를 장바구니에 넣으시겠습니까? 메뉴판으로 돌아가기를 원하시면 0을 입력해 주세요");
     }
 
-    public int inputQuantity(int quantity) {
+    public int selectQuantity(int quantity) {
         if (quantity == 0) {
             System.out.println("메뉴판으로 돌아갑니다.");
             return quantity;
