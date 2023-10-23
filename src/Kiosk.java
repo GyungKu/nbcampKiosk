@@ -192,7 +192,7 @@ public class Kiosk {
     }
 
     public boolean cancel(int select) {
-        if ((select > orders.size() || select < 0) && select != 0) {
+        if (!orders.containsKey(select)) {
             System.out.println("없는 주문 번호입니다.");
             return false;
         }
