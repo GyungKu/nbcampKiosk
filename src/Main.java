@@ -63,7 +63,7 @@ public class Main {
                     String size = "";
                     while (true) {
                         if (kiosk.printSize(select)) { // 메뉴가 햄버거 일때만 사이즈 선택 여부를 출력 하고 true를 반환
-                            size = kiosk.sizeChoice(customer.select()); // 1을 입력하면 싱글, 2를 입력하면 더블, 그 외의 숫자는 ?를 반환
+                            size = kiosk.selectSize(customer.select()); // 1을 입력하면 싱글, 2를 입력하면 더블, 그 외의 숫자는 ?를 반환
                             if (!size.equals("?")) { // 1 또는 2외의 숫자를 입력 했다면 다시
                                 break;
                             }
@@ -76,8 +76,8 @@ public class Main {
 
                     int quantity;
                     while (true) {
-                        kiosk.printQuantityInput();
-                        quantity = kiosk.inputQuantity(customer.select());
+                        kiosk.printSelectQuantity();
+                        quantity = kiosk.selectQuantity(customer.select());
                         if (quantity >= 0) {
                             break;
                         }
