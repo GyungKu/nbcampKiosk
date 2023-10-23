@@ -2,7 +2,7 @@ public class Main {
 
     public static void main(String[] args) {
         final Kiosk kiosk = new Kiosk();
-        Customer customer = new Customer();
+        final Customer customer = new Customer();
 
         // 키오스크 메뉴, 상품 추가
         kioskSet(kiosk);
@@ -25,49 +25,49 @@ public class Main {
                     break EXIT;
                 case 5:
                     while (!flag) {
-                        kiosk.printCart();
-                        flag = kiosk.order(customer.select());
+                        kiosk.printCart(); // 장바구니 출력
+                        flag = kiosk.order(customer.select()); // 주문 or 메뉴판 이동 or 장바구니 초기화
                     }
                     break;
                 case 6:
                     while (!flag) {
-                        if (kiosk.printOrders()) {
-                            kiosk.cancel(customer.select());
+                        if (kiosk.printOrders()) { // 주문내역이 존재하면 true 반환하고 출력 / 없다면 false 반환하고 메뉴판 이동
+                            kiosk.cancel(customer.select()); // 주문번호 선택해서 취소
                             break;
                         }
                         flag = true;
                     }
                     break;
                 case 7:
-                    kiosk.sales();
-                    customer.select();
+                    kiosk.sales(); // 매출 출력
+                    customer.select(); // 아무 숫자 입력시 메뉴판 이동
                     break;
                 case 8:
-                    kiosk.salesDetails();
-                    customer.select();
+                    kiosk.salesDetails(); // 판매 현황 조회, 내역이 존재하지 않으면 메뉴판으로 자동이동
+                    customer.select(); // 판매현황 조회 후 아무 숫자 입력시 메뉴판으로 이동
                     break;
                 default:
                     Product choiceProduct;
                     while (true) {
-                        kiosk.printProducts(select);
-                        choiceProduct = kiosk.selectProduct(select, customer.select()); // 상품을 선택하고 선택한 상품을 출력함
+                        kiosk.printProducts(select); // 상품 목록 출력
+                        choiceProduct = kiosk.selectProduct(select, customer.select()); // 상품을 선택하고 선택한 상품을 반환함
                         if (choiceProduct != null) {
                             break;
                         }
                     }
-                    if (choiceProduct.getName().equals("")) {
+                    if (choiceProduct.getName().equals("")) { // 0 입력 시 name 이 공백인 객체 반환, 메뉴판으로 이동
                         break;
                     }
 
 
                     String size = "";
                     while (true) {
-                        if (kiosk.printSize(select)) {
-                            size = kiosk.sizeChoice(customer.select());
-                            if (!size.equals("?")) {
+                        if (kiosk.printSize(select)) { // 메뉴가 햄버거 일때만 사이즈 선택 여부를 출력 하고 true를 반환
+                            size = kiosk.sizeChoice(customer.select()); // 1을 입력하면 싱글, 2를 입력하면 더블, 그 외의 숫자는 ?를 반환
+                            if (!size.equals("?")) { // 1 또는 2외의 숫자를 입력 했다면 다시
                                 break;
                             }
-                        } else {
+                        } else { // 메뉴가 햄버거가 아니면 탈출
                             break;
                         }
                     }

@@ -3,7 +3,7 @@ import java.util.List;
 
 public class Order {
 //    private Map<Product, Integer> orderProduct = new HashMap();
-    List<OrderProduct> orderProducts = new ArrayList<>();
+    private final List<OrderProduct> orderProducts = new ArrayList<>();
 
     public Order(List<OrderProduct> orderProducts) {
         this.orderProducts.addAll(orderProducts);
