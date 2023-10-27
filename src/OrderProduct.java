@@ -1,23 +1,25 @@
 public class OrderProduct extends Product{
 
     private int quantity;
-    private boolean isDouble;
-    public OrderProduct(Product product, boolean isDouble, int quantity) {
-        super(isDouble ? product.getName() + "(더블)" : product.getName(), product.getDescription(), isDouble ? product.getPrice()+2000 : product.getPrice());
-        this.quantity = quantity;
-        this.isDouble = isDouble;
+    private String size;
+
+    public OrderProduct(Product product) {
+        super(product.getName(), product.getDescription(), product.getPrice(), product.getId(), product.getMenu());
     }
 
     public int getQuantity() {
         return quantity;
     }
 
-    public boolean isDouble() {
-        return isDouble;
-    }
-
     public void quantityPlus(int quantity) {
         this.quantity += quantity;
+    }
+
+    public void selectSize() {
+        this.size = "더블";
+        nameChangeSize();
+        int price = getPrice();
+        changePrice(price+2000);
     }
 
 }
